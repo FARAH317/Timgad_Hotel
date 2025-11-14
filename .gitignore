@@ -1,0 +1,20 @@
+# Python
+venv/
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.sqlite3
+db.sqlite3
+.env
+
+# Django static/media
+staticfiles/
+media/
+
+# Coverage
+htmlcov/
+.coverage
+
+# Node (tu as déjà node_modules et dist)
+# npm-debug.log* (déjà présent)
