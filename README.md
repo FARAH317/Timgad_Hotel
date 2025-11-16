@@ -43,15 +43,113 @@ backend/
 ├── manage.py
 ├── requirements.txt
 ├── .env
-├── config/                    # Django project configuration
-├── apps/                      # Django apps
-│   ├── core/                  # Shared utilities
-│   ├── users/                 # Users & authentication
-│   ├── rooms/                 # Rooms & amenities
-│   ├── reservations/          # Reservation management
-│   ├── payments/              # Payment processing
-│   └── notifications/         # Email/SMS notifications
-├── infrastructure/            # External services
+│
+├── config/                           # Configuration Django
+│   ├── settings/
+│   │   ├── base.py
+│   │   ├── development.py
+│   │   └── production.py
+│   ├── urls.py
+│   ├── wsgi.py
+│   └── asgi.py
+│
+├── apps/
+│   │
+│   ├── core/                         # Code partagé
+│   │   ├── models/
+│   │   │   └── base.py              # Modèle de base (timestamps, etc.)
+│   │   ├── exceptions.py            # Exceptions personnalisées
+│   │   └── utils.py                 # Utilitaires communs
+│   │
+│   ├── users/                        # Utilisateurs & Auth
+│   │   ├── models/
+│   │   │   ├── user.py              # MTV Pattern
+│   │   │   └── profile.py
+│   │   ├── managers/
+│   │   │   └── user_manager.py      # Repository Pattern
+│   │   ├── services/
+│   │   │   └── user_service.py      # Service Layer
+│   │   ├── api/
+│   │   │   ├── views.py             # ViewSets
+│   │   │   ├── serializers.py
+│   │   │   └── urls.py
+│   │   └── admin.py
+│   │
+│   ├── rooms/                        # Chambres
+│   │   ├── models/
+│   │   │   ├── room.py              # MTV Pattern
+│   │   │   ├── room_type.py
+│   │   │   └── amenity.py
+│   │   ├── managers/
+│   │   │   └── room_manager.py      # Repository Pattern
+│   │   ├── services/
+│   │   │   ├── room_service.py      # Service Layer
+│   │   │   └── availability_service.py
+│   │   ├── api/
+│   │   │   ├── views.py
+│   │   │   ├── serializers.py
+│   │   │   └── urls.py
+│   │   └── admin.py
+│   │
+│   ├── reservations/                 # Réservations (CŒUR DU SYSTÈME)
+│   │   ├── models/
+│   │   │   └── reservation.py       # MTV Pattern
+│   │   ├── managers/
+│   │   │   └── reservation_manager.py  # Repository Pattern
+│   │   ├── services/
+│   │   │   ├── reservation_service.py  # Service Layer + Unit of Work
+│   │   │   ├── pricing_service.py      # Strategy Pattern (Tarification)
+│   │   │   └── states/                 # State Pattern
+│   │   │       ├── __init__.py
+│   │   │       ├── base_state.py
+│   │   │       ├── pending_state.py
+│   │   │       ├── confirmed_state.py
+│   │   │       ├── checked_in_state.py
+│   │   │       ├── checked_out_state.py
+│   │   │       └── cancelled_state.py
+│   │   ├── api/
+│   │   │   ├── views.py
+│   │   │   ├── serializers.py
+│   │   │   └── urls.py
+│   │   ├── signals.py                  # Observer Pattern
+│   │   └── admin.py
+│   │
+│   ├── payments/                     # Paiements
+│   │   ├── models/
+│   │   │   ├── payment.py           # MTV Pattern
+│   │   │   └── invoice.py
+│   │   ├── managers/
+│   │   │   └── payment_manager.py   # Repository Pattern
+│   │   ├── services/
+│   │   │   ├── payment_service.py   # Service Layer + Unit of Work
+│   │   │   └── strategies/          # Strategy Pattern (Paiement)
+│   │   │       ├── __init__.py
+│   │   │       ├── base_strategy.py
+│   │   │       ├── stripe_strategy.py
+│   │   │       ├── paypal_strategy.py
+│   │   │       └── cash_strategy.py
+│   │   ├── api/
+│   │   │   ├── views.py
+│   │   │   ├── serializers.py
+│   │   │   └── urls.py
+│   │   └── admin.py
+│   │
+│   └── notifications/                # Notifications
+│       ├── models/
+│       │   └── notification.py
+│       ├── services/
+│       │   └── notification_service.py  # Observer Pattern
+│       ├── tasks.py                     # Celery tasks (email, SMS)
+│       └── api/
+│           ├── views.py
+│           └── urls.py
+│
+├── infrastructure/                   # Services externes
+│   ├── email/
+│   │   └── email_service.py         # Service email simple
+│   └── sms/
+│       └── sms_service.py           # Service SMS simple
+│
 └── static/
 \\\
 
@@ -63,22 +161,89 @@ backend/
 frontend/
 ├── public/
 │   └── index.html
+│
 ├── src/
 │   ├── app/
 │   │   ├── App.jsx
-│   │   ├── store.js
-│   │   └── routes.jsx
-│   ├── features/             # Organized by feature
-│   │   ├── auth/             # Authentication
-│   │   ├── rooms/            # Room components & store
-│   │   ├── reservations/     # Reservation components & store
-│   │   ├── payments/         # Payment components & store
-│   │   └── dashboard/        # Admin dashboard
-│   ├── components/           # Reusable components
-│   ├── services/             # Global API services
-│   ├── utils/                # Helpers, validators
-│   ├── styles/               # Tailwind CSS
-│   └── assets/               # Images, icons
+│   │   ├── store.js                  # Redux store (state global)
+│   │   └── routes.jsx                # React Router
+│   │
+│   ├── features/                     # Organisation par fonctionnalité
+│   │   │
+│   │   ├── auth/                     # Authentification
+│   │   │   ├── components/           # Component Pattern
+│   │   │   │   ├── LoginForm.jsx
+│   │   │   │   └── RegisterForm.jsx
+│   │   │   ├── services/
+│   │   │   │   └── authService.js    # Appels API
+│   │   │   └── store/
+│   │   │       └── authSlice.js      # Redux slice
+│   │   │
+│   │   ├── rooms/                    #  Chambres
+│   │   │   ├── components/           # Component Pattern
+│   │   │   │   ├── RoomList.jsx
+│   │   │   │   ├── RoomCard.jsx
+│   │   │   │   ├── RoomDetails.jsx
+│   │   │   │   └── RoomSearch.jsx
+│   │   │   ├── services/
+│   │   │   │   └── roomService.js
+│   │   │   └── store/
+│   │   │       └── roomSlice.js
+│   │   │
+│   │   ├── reservations/             # Réservations
+│   │   │   ├── components/           # Component Pattern
+│   │   │   │   ├── ReservationForm.jsx
+│   │   │   │   ├── ReservationList.jsx
+│   │   │   │   ├── ReservationCard.jsx
+│   │   │   │   └── ReservationDetails.jsx
+│   │   │   ├── services/
+│   │   │   │   └── reservationService.js
+│   │   │   └── store/
+│   │   │       └── reservationSlice.js
+│   │   │
+│   │   ├── payments/                 # Paiements
+│   │   │   ├── components/           # Component Pattern
+│   │   │   │   ├── PaymentForm.jsx
+│   │   │   │   └── PaymentSummary.jsx
+│   │   │   ├── services/
+│   │   │   │   └── paymentService.js
+│   │   │   └── store/
+│   │   │       └── paymentSlice.js
+│   │   │
+│   │   └── dashboard/                # Dashboard Admin
+│   │       ├── components/           # Component Pattern
+│   │       │   ├── Dashboard.jsx
+│   │       │   ├── StatsCard.jsx
+│   │       │   └── RecentReservations.jsx
+│   │       └── services/
+│   │           └── dashboardService.js
+│   │
+│   ├── components/                   # Composants réutilisables
+│   │   ├── Button.jsx               # Component Pattern
+│   │   ├── Input.jsx
+│   │   ├── Select.jsx
+│   │   ├── Card.jsx
+│   │   ├── Modal.jsx
+│   │   ├── DatePicker.jsx
+│   │   ├── Navbar.jsx
+│   │   ├── Footer.jsx
+│   │   └── Layout.jsx
+│   │
+│   ├── services/                     # Services globaux
+│   │   └── api/
+│   │       ├── apiClient.js         # Axios configuration
+│   │       └── endpoints.js         # API endpoints
+│   │
+│   ├── utils/                        # Utilitaires
+│   │   ├── validators.js
+│   │   ├── formatters.js
+│   │   └── constants.js
+│   │
+│   ├── styles/                       # Styles
+│   │   └── index.css                # Tailwind CSS
+│   │
+│   └── assets/                       # Images, icons
+│
 ├── package.json
 ├── tailwind.config.js
 ├── vite.config.js
@@ -91,7 +256,7 @@ frontend/
 
 ### Backend
 
-\\\ash
+\\\bash
 # Create virtual environment
 python -m venv venv
 
@@ -116,7 +281,7 @@ python manage.py runserver
 
 ### Frontend
 
-\\\ash
+\\\bash
 # Install dependencies
 npm install
 
@@ -128,7 +293,7 @@ npm run dev
 
 ## Environment Variables
 
-Create .env files in both ackend/ and rontend/ with necessary secrets:
+Create .env files in both backend/ and frontend/ with necessary secrets:
 
 **Backend**
 \\\
