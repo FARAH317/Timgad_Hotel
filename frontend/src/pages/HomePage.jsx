@@ -13,6 +13,8 @@ import {
 } from '@heroicons/react/24/outline';
 import Button from '@/components/Button';
 import { APP_NAME } from '@/utils/constants';
+import restaurantImage from '@/assets/restaurant.jpg';
+import parkingImage from '@/assets/parking.jpg';
 
 const HomePage = () => {
   const features = [
@@ -67,14 +69,14 @@ const HomePage = () => {
       title: 'Restaurant Gastronomique',
       description: 'Cuisine raffinée préparée par nos chefs étoilés',
       count: '5 Étoiles',
-      image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80',
+      image: restaurantImage,
     },
     {
       icon: BuildingOffice2Icon,
-      title: 'Spa & Wellness',
+      title: 'Parking',
       description: 'Détendez-vous dans notre centre de bien-être luxueux',
       count: 'Premium',
-      image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80',
+      image: parkingImage,
     },
   ];
 
@@ -298,78 +300,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Hotel Views Showcase - NOUVEAU */}
-      <section className="py-24 bg-white">
-        <div className="luxury-container">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left - Content */}
-            <div className="order-2 lg:order-1 animate-fade-in">
-              <span className="section-title">Nos Installations</span>
-              <h2 
-                className="text-4xl md:text-5xl font-bold text-[#2C2416] mb-6"
-                style={{ fontFamily: 'Cormorant Garamond, serif' }}
-              >
-                Un Cadre d'Exception
-              </h2>
-              <div className="w-16 h-1 bg-[#C9A961] mb-6"></div>
-              <p className="text-[#6B5D4F] leading-relaxed mb-6 text-lg">
-                Notre hôtel offre des vues spectaculaires et des espaces conçus 
-                pour votre bien-être. Profitez de notre piscine à débordement, 
-                de notre spa luxueux et de nos jardins paisibles.
-              </p>
-              <ul className="space-y-4 mb-8">
-                <li className="flex items-start gap-3">
-                  <CheckCircleIcon className="h-6 w-6 text-[#C9A961] flex-shrink-0 mt-1" />
-                  <span className="text-[#6B5D4F]">Piscine à débordement avec vue</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircleIcon className="h-6 w-6 text-[#C9A961] flex-shrink-0 mt-1" />
-                  <span className="text-[#6B5D4F]">Spa & centre de bien-être</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircleIcon className="h-6 w-6 text-[#C9A961] flex-shrink-0 mt-1" />
-                  <span className="text-[#6B5D4F]">Salle de fitness équipée</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <CheckCircleIcon className="h-6 w-6 text-[#C9A961] flex-shrink-0 mt-1" />
-                  <span className="text-[#6B5D4F]">Jardins méditerranéens</span>
-                </li>
-              </ul>
-              <Button variant="secondary">
-                Découvrir Plus
-              </Button>
-            </div>
-
-            {/* Right - Images Grid */}
-            <div className="order-1 lg:order-2 grid grid-cols-2 gap-4">
-              <div className="space-y-4">
-                <img 
-                  src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80" 
-                  alt="Piscine"
-                  className="rounded-lg shadow-lg w-full h-64 object-cover hover:scale-105 transition-transform duration-500"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&q=80" 
-                  alt="Spa"
-                  className="rounded-lg shadow-lg w-full h-48 object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-              <div className="space-y-4 mt-8">
-                <img 
-                  src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80" 
-                  alt="Lobby"
-                  className="rounded-lg shadow-lg w-full h-48 object-cover hover:scale-105 transition-transform duration-500"
-                />
-                <img 
-                  src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=600&q=80" 
-                  alt="Vue extérieure"
-                  className="rounded-lg shadow-lg w-full h-64 object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
       {/* Features Section - Luxury Grid */}
       <section className="py-20 bg-[#FDFBF7]">

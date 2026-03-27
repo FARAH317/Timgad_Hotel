@@ -92,11 +92,11 @@ const Footer = () => {
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-[#8B7965]">
                 <MapPinIcon className="h-5 w-5 text-[#C9A961] mt-0.5 flex-shrink-0" />
-                <span>Tlemcen, Algérie</span>
+                <span>6 Rue Benhamed Lahouari, Oran</span>
               </li>
               <li className="flex items-center gap-3 text-[#8B7965]">
                 <PhoneIcon className="h-5 w-5 text-[#C9A961] flex-shrink-0" />
-                <span>+213 555 12 34 56</span>
+                <span>041 36 15 14</span>
               </li>
               <li className="flex items-center gap-3 text-[#8B7965]">
                 <EnvelopeIcon className="h-5 w-5 text-[#C9A961] flex-shrink-0" />
