@@ -140,37 +140,3 @@ class LoginSerializer(serializers.Serializer):
         write_only=True,
         style={'input_type': 'password'}
     )
-    
-    def validate(self, attrs):
-        """
-        Validate user credentials.
-        """
-        email = attrs.get('email')
-        password = attrs.get('password')
-        
-        if email and password:
-            user = authenticate(
-                request=self.context.get('request'),
-                username=email,
-                password=password
-            )
-            
-            if not user:
-                raise serializers.ValidationError(
-                    'Email ou mot de passe incorrect.',
-                    code='authorization'
-                )
-            
-            if not user.is_active:
-                raise serializers.ValidationError(
-                    'Ce compte est désactivé.',
-                    code='authorization'
-                )
-        else:
-            raise serializers.ValidationError(
-                'Email et mot de passe requis.',
-                code='authorization'
-            )
-        
-        attrs['user'] = user
-        return attrs
